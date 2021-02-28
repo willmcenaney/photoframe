@@ -1,6 +1,6 @@
 #!/bin/env node
 
-var settings = require('settings.json');
+var settings = require('../settings.json');
 
 var Flickr = require('flickr-sdk'), flickrOptions = {
     api_key: settings.consumerKey,
