@@ -1,20 +1,30 @@
 #!/bin/bash
 
-logLocation="/var/logs/photoframe"
+logLocation="/var/log/photoframe"
 installLog="$logLocation/install.log"
+autoupLog="$logLocation/autoupdate.log"
 
 mkdir -p $logLocation
+touch $installLog $autoupLog
 size=$(stat -c%s "$installLog")
-if [ $size -gt 50 ]; then rm -f $installLog; touch $installLog ; fi
+if [ $size -gt 50 ]; then 
+    rm -f $installLog
+    touch $installLog
+fi
 
-date=`date -uIns`; echo "${date::-11} Starting Install" >> $installLog
+export DEBIAN_FRONTEND=non-interactive
 
-sudo apt-get install nodejs npm curl jq >> $installLog 2>&1
+date=`date -uIns`; echo "${date::-11} Starting Install"
 
-updateScript=`dirname "${BASH_SOURCE[0]}"`/UpdateFrame
+sudo apt-get --yes --autoremove --no-install-recommends install nodejs npm curl jq 2>&1
+
+updateScript=`readlink -f "${BASH_SOURCE[0]}"`
+updateScript=`dirname $updateScript`/UpdateFrame
 
 cat << EOF > /etc/cron.d/photoframe
 #Photoframe auto-updater code
+# m h   dom mon dow user command
+* *     * * *   root    /bin/bash -c "$updateScript 2>&1 >> $autoupLog"
+EOF
 
-* * * * * bash $updateScript >/dev/null 2>&1
-EOF 2>$installLog
+sudo service cron reload

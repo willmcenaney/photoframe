@@ -1,18 +1,18 @@
 #!/bin/bash
 
-logLocation="/var/logs/photoframe"
+logLocation="/var/log/photoframe"
 autoupLog="$logLocation/autoupdate.log"
+installLog="$logLocation/install.log"
 
 touch $autoupLog
-size=$(stat -c%s "$autoupLog")
+size=`stat -c%s $autoupLog`
 if [ $size -gt 50 ]; then
     rm -f $autoupLog
     touch $autoupLog 
 fi
-function log(){ date=`date -uIns`; echo "${date::-11} $@" >> $autoupLog; }
 
-cd `dirname "${BASH_SOURCE[0]}"`/../
-
+folder=`dirname "${BASH_SOURCE[0]}"`
+cd $folder/../
 last_install=`stat -c %Y scripts/InstallFrame`
 
 gitcommitsurl="`git remote get-url origin | sed -re 's#(.*://(www.)?github.com)(.*)\.git#https://api.github.com/repos\3#'`/commits"
@@ -21,15 +21,15 @@ commitdate=`date "+%s" -d ${commitdate:1:-1}`
 lastpull=`stat -c %Y .git/FETCH_HEAD`
 
 if [ $commitdate -gt $lastpull ]; then
-    log "Updating git repo"
+    echo "Updating git repo"
     git pull
     new_install=`stat -c %Y scripts/InstallFrame`
     if [ $last_install -lt $new_install ]; then
-        log "Install has updated, running InstallFrame"
-        bash scripts/InstallFrame
+        echo "Install has updated, running InstallFrame"
+        bash $folder/InstallFrame >> $installLog 2>>$autoupLog
     fi
 else
-    log "No Change"
+    echo "No Change"
 fi
 
 
