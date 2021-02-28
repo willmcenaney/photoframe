@@ -8,12 +8,12 @@ gitcommitsurl="`git remote get-url origin | sed -re 's#(.*://)(.*)\.git#https://
 commitdate=`date -d $(curl --silent $gitcommitsurl | jq '.[0].commit.committer.date')`
 lastpull=`stat -c %y .git/FETCH_HEAD`
 
-if [ $commitdate -gt $lastpull ]; then
+if [[ "$commitdate" -gt "$lastpull" ]]; then
     git pull
 fi
 
 new_install=`stat -c %y scripts/InstallFrame`
-if [ $last_install -lt $new_install ]; then
+if [[ "$last_install" -lt "$new_install" ]]; then
     bash scripts/InstallFrame
 fi
 
