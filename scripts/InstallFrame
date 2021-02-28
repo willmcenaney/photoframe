@@ -24,7 +24,7 @@ updateScript=`dirname $updateScript`/UpdateFrame
 cat << EOF > /etc/cron.d/photoframe
 #Photoframe auto-updater code
 # m h   dom mon dow user command
-* *     * * *   root    /bin/bash -c "$updateScript 2>&1 >> $autoupLog"
+* *     * * *   root    $updateScript 2>&1 >> $autoupLog
 EOF
 
 sudo service cron reload
