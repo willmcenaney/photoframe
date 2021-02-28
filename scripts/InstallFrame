@@ -1,7 +1,19 @@
 #!/bin/bash
 
+logLocation="/var/logs/photoframe"
+installLog="$logLocation/install.log"
 
-sudo apt install nodejs npm curl jq
+mkdir -p $logLocation
+size=$(stat -c%s "$installLog")
+if [ $size -gt 50 ]; then
+    rm -f $installLog
+    touch $installLog 
+fi
+
+date=`date -uIns`
+echo "${date::-11} Starting Install" >> $installLog
+
+sudo apt install nodejs npm curl jq >> $installLog 2>&1
 
 updateScript=`dirname "${BASH_SOURCE[0]}"`/UpdateFrame
 
@@ -9,4 +21,4 @@ cat << EOF > /etc/cron.d/photoframe
 #Photoframe auto-updater code
 
 * * * * * bash $updateScript >/dev/null 2>&1
-EOF
+EOF 2>$installLog

@@ -1,21 +1,38 @@
 #!/bin/bash
 
+logLocation="/var/logs/photoframe"
+autoupLog="$logLocation/autoupdate.log"
+
+touch $autoupLog
+size=$(stat -c%s "$autoupLog")
+if [ $size -gt 50 ]; then
+    rm -f $autoupLog
+    touch $autoupLog 
+fi
+function log(){ date=`date -uIns`; echo "${date::-11} $@" >> $autoupLog; }
+
 cd `dirname "${BASH_SOURCE[0]}"`/../
 
-last_install=`stat -c %y scripts/InstallFrame`
+last_install=`stat -c %Y scripts/InstallFrame`
 
-gitcommitsurl="`git remote get-url origin | sed -re 's#(.*://)(.*)\.git#https://api.\2)`/commits"
-commitdate=`date -d $(curl --silent $gitcommitsurl | jq '.[0].commit.committer.date')`
-lastpull=`stat -c %y .git/FETCH_HEAD`
+gitcommitsurl="`git remote get-url origin | sed -re 's#(.*://(www.)?github.com)(.*)\.git#https://api.github.com/repos\3#'`/commits"
+commitdate=`curl --silent $gitcommitsurl | jq '.[0].commit.committer.date'`
+commitdate=`date "+%s" -d ${commitdate:1:-1}`
+lastpull=`stat -c %Y .git/FETCH_HEAD`
 
-if [[ "$commitdate" -gt "$lastpull" ]]; then
+if [ $commitdate -gt $lastpull ]; then
+    log "Updating git repo"
     git pull
+    new_install=`stat -c %Y scripts/InstallFrame`
+    if [ $last_install -lt $new_install ]; then
+        log "Install has updated, running InstallFrame"
+        bash scripts/InstallFrame
+    fi
+else
+    log "No Change"
 fi
 
-new_install=`stat -c %y scripts/InstallFrame`
-if [[ "$last_install" -lt "$new_install" ]]; then
-    bash scripts/InstallFrame
-fi
+
 
 
 #Add any service restarts here
