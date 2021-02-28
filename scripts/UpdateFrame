@@ -6,7 +6,7 @@ installLog="$logLocation/install.log"
 
 touch $autoupLog
 size=`stat -c%s $autoupLog`
-if [ $size -gt 50 ]; then
+if [ $size -gt 500 ]; then
     rm -f $autoupLog
     touch $autoupLog 
 fi

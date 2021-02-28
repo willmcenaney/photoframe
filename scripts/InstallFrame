@@ -7,7 +7,7 @@ autoupLog="$logLocation/autoupdate.log"
 mkdir -p $logLocation
 touch $installLog $autoupLog
 size=$(stat -c%s "$installLog")
-if [ $size -gt 50 ]; then 
+if [ $size -gt 500 ]; then 
     rm -f $installLog
     touch $installLog
 fi
