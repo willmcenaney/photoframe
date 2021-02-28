@@ -16,7 +16,7 @@ export DEBIAN_FRONTEND=non-interactive
 
 date=`date -uIns`; echo "${date::-11} Starting Install"
 
-sudo apt-get --yes --autoremove --no-install-recommends install nodejs npm curl jq 2>&1
+apt-get --yes --autoremove --no-install-recommends install nodejs npm curl jq
 
 updateScript=`readlink -f "${BASH_SOURCE[0]}"`
 updateScript=`dirname $updateScript`/UpdateFrame
@@ -27,4 +27,4 @@ cat << EOF > /etc/cron.d/photoframe
 * *     * * *   root    $updateScript 2>&1 >> $autoupLog
 EOF
 
-sudo service cron reload
+service cron reload
