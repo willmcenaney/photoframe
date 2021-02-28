@@ -30,4 +30,4 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 * *     * * *   root    $updateScript 2>&1 >> $autoupLog
 EOF
 
-service cron reload
+/usr/sbin/service cron reload
