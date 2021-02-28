@@ -27,7 +27,7 @@ SHELL=$SHELL
 PATH=$PATH
 
 # m h   dom mon dow user command
-* *     * * *   root    bash -c "$updateScript 2>&1 >> $autoupLog"
+* *     * * *   root    $updateScript 2>&1 >> $autoupLog
 EOF
 
 service cron reload
