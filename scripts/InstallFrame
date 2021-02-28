@@ -18,6 +18,8 @@ date=`date -uIns`; echo "${date::-11} Starting Install"
 
 apt-get --yes --autoremove --no-install-recommends install nodejs npm curl jq
 
+npm install .
+
 updateScript=`readlink -f "${BASH_SOURCE[0]}"`
 updateScript=`dirname $updateScript`/UpdateFrame
 

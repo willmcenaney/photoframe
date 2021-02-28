@@ -14,6 +14,7 @@ fi
 folder=`dirname "${BASH_SOURCE[0]}"`
 cd $folder/../
 last_install=`stat -c %Y scripts/InstallFrame`
+last_package=`stat -c %Y package.json`
 
 gitcommitsurl="`git remote get-url origin | sed -re 's#(.*://(www.)?github.com)(.*)\.git#https://api.github.com/repos\3#'`/commits"
 commitdate=`curl --silent $gitcommitsurl | jq '.[0].commit.committer.date'`
@@ -24,7 +25,8 @@ if [ $commitdate -gt $lastpull ]; then
     echo "Updating git repo"
     git pull
     new_install=`stat -c %Y scripts/InstallFrame`
-    if [ $last_install -lt $new_install ]; then
+    new_package=`stat -c %Y package.json`
+    if [ $last_install -lt $new_install ] || [ $last_package -lt $new_package ]; then
         echo "Install has updated, running InstallFrame"
         bash $folder/InstallFrame >> $installLog 2>>$autoupLog
     fi

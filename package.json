@@ -1,0 +1,15 @@
+{
+  "name": "photoframe",
+  "version": "1.0.0",
+  "description": "Photo Frame",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/willmcenaney/photoframe.git"
+  },
+  "author": "Will McEnaney",
+  "license": "ISC",
+  "dependencies": {
+    "flickr-sdk": "~3.10.0"
+  }
+}
