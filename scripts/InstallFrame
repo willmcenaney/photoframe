@@ -3,10 +3,10 @@
 
 sudo apt install nodejs npm curl jq
 
-updateScript=`dirname "$0"/UpdateFrame`
+updateScript=`dirname "${BASH_SOURCE[0]}"`/UpdateFrame
 
 cat << EOF > /etc/cron.d/photoframe
 #Photoframe auto-updater code
 
-* * * * * $updateScript >/dev/null 2>&1
+* * * * * bash $updateScript >/dev/null 2>&1
 EOF
