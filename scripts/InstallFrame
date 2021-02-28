@@ -5,15 +5,11 @@ installLog="$logLocation/install.log"
 
 mkdir -p $logLocation
 size=$(stat -c%s "$installLog")
-if [ $size -gt 50 ]; then
-    rm -f $installLog
-    touch $installLog 
-fi
+if [ $size -gt 50 ]; then rm -f $installLog; touch $installLog ; fi
 
-date=`date -uIns`
-echo "${date::-11} Starting Install" >> $installLog
+date=`date -uIns`; echo "${date::-11} Starting Install" >> $installLog
 
-sudo apt install nodejs npm curl jq >> $installLog 2>&1
+sudo apt-get install nodejs npm curl jq >> $installLog 2>&1
 
 updateScript=`dirname "${BASH_SOURCE[0]}"`/UpdateFrame
 
